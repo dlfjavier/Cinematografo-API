@@ -103,7 +103,7 @@ def get_actor(nombre_actor: str):
 
     actor_movies = df_peliculas[df_peliculas['id'].isin(actor_films_ids)]
     cantidad_filmaciones = len(actor_movies)
-
+    
     if cantidad_filmaciones == 0:
         mensaje = f"No se encontraron películas que actúe {nombre_actor}."
     else:
