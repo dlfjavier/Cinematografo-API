@@ -36,6 +36,20 @@ df_credits = pd.DataFrame({
 
 df_peliculas['release_date'] = pd.to_datetime(df_peliculas['release_date'])
 
+@app.get("/index/")
+def index():
+    cfun1 = ["para retornar la cantidad de peliculas que se estrenaron ese mes historicamente /cantidad_filmaciones_mes/{mes}"]
+    cfun2 = ["para retornar la cantidad de peliculas que se estrenaron ese dia historicamente /cantidad_filmaciones_dia{dia}"]
+    cfun3 = ["ingresa el título de una filmación esperando como respuesta el título, el año de estreno y el score /score_titulo/{titulo}"]
+    cfun4 = ["ingresa el título de una filmación esperando como respuesta el título, la cantidad de votos y el valor promedio de las votaciones /votos_titulo/{titulo}"]
+    cfun5 = ["ingresa nombre de actor para devolver el éxito a través del retorno y cantidad de películas que participó y el promedio de retorno /get_actor/{nombre_actor"]  
+    cfun6 = ["ingresa nombre de director para devolver el éxito del mismo medido a través del retorno, nombre de sus películas, "]
+    cfun6 = cfun6 + ["con la fecha de lanzamiento, retorno individual, costo y ganancia de la misma. /get_director(nombre_director)"]
+    cfun7 = ['Ingresas un nombre de pelicula y te recomienda las similares en una lista. /recomendacion/{titulo}']
+
+    milista = cfun1+cfun2+cfun3+cfun4+cfun5+cfun6+cfun7
+    return milista
+
 @app.get("/cantidad_filmaciones_mes/{mes}")
 def cantidad_filmaciones_mes(mes: str):
     meses_ingles = {
@@ -141,14 +155,3 @@ def get_director(nombre_director: str):
 
     return mensaje
 
-'''print(cantidad_filmaciones_mes('enero'))
-
-print(cantidad_filmaciones_dia('martes'))
-
-print(score_titulo('Película 3'))
-print(votos_titulo('Película 1'))
-print(votos_titulo('Película 2'))
-
-print(get_actor('Strip'))
-
-print(get_director('Rapisarda'))'''
