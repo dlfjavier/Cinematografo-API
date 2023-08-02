@@ -113,8 +113,6 @@ def get_actor(nombre_actor: str):
     return mensaje
 
 @app.get("/get_director/{nombre_director}")
-df_mov_dir = pd.read_parquet('datasets/pq_mov_dir.parquet')
-
 def get_director(nombre_director: str):
     df_mov_dir = pd.read_parquet('datasets/pq_mov_dir.parquet')
 
