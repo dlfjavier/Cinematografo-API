@@ -113,9 +113,11 @@ def get_actor(nombre_actor: str):
     return mensaje
 
 @app.get("/get_director/{nombre_director}")
+df_mov_dir = pd.read_parquet('datasets/pq_mov_dir.parquet')
+
 def get_director(nombre_director: str):
-    
-    df_mov_dir = pd.read_parquet('pq_mov_dir.parquet')
+    df_mov_dir = pd.read_parquet('datasets/pq_mov_dir.parquet')
+
     # Filtrar el DataFrame para obtener solo las películas dirigidas por el director dado
     director_movies = df_mov_dir[df_mov_dir['director'] == nombre_director]
 
@@ -158,33 +160,4 @@ def get_director(nombre_director: str):
     # Retornar la respuesta formateada
     respuesta = "{} tiene un retorno_total_director de {:,.2f}.".format(nombre_director, total_return)
     respuesta += "\n" + '\n'.join([', '.join(pelicula) for pelicula in detalles_peliculas_str])
-    return respuesta   
-    '''director_films = df_credits[df_credits['director'] == nombre_director]
-    director_films_ids = director_films['id'].tolist()
-
-    director_movies = df_peliculas[df_peliculas['id'].isin(director_films_ids)]
-    peliculas_info = []
-
-    if director_movies.empty:
-        mensaje = f"No se encontraron películas dirigidas por {nombre_director}."
-    else:
-        for index, row in director_movies.iterrows():
-            pelicula_info = {
-                'nombre_película': row['title'],
-                'fecha_lanzamiento': row['release_date'],
-                'retorno_individual': row['return'],
-                'costo': row['budget'],
-                'ganancia': row['revenue']
-            }
-            peliculas_info.append(pelicula_info)
-
-        mensaje = f"El director {nombre_director} ha tenido éxito con las siguientes películas:\n"
-        for pelicula in peliculas_info:
-            mensaje += f"Nombre: {pelicula['nombre_película']}\n"
-            mensaje += f"Fecha de lanzamiento: {pelicula['fecha_lanzamiento']}\n"
-            mensaje += f"Retorno individual: {pelicula['retorno_individual']}\n"
-            mensaje += f"Costo: {pelicula['costo']}\n"
-            mensaje += f"Ganancia: {pelicula['ganancia']}\n\n"
-
-    return mensaje
-'''
+    return respuesta
