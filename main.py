@@ -36,19 +36,7 @@ df_credits = pd.DataFrame({
 
 df_peliculas['release_date'] = pd.to_datetime(df_peliculas['release_date'])
 
-@app.get("/index/")
-def index():
-    cfun1 = ["para retornar la cantidad de peliculas que se estrenaron ese mes historicamente /cantidad_filmaciones_mes/{mes}"]
-    cfun2 = ["para retornar la cantidad de peliculas que se estrenaron ese dia historicamente /cantidad_filmaciones_dia{dia}"]
-    cfun3 = ["ingresa el título de una filmación esperando como respuesta el título, el año de estreno y el score /score_titulo/{titulo}"]
-    cfun4 = ["ingresa el título de una filmación esperando como respuesta el título, la cantidad de votos y el valor promedio de las votaciones /votos_titulo/{titulo}"]
-    cfun5 = ["ingresa nombre de actor para devolver el éxito a través del retorno y cantidad de películas que participó y el promedio de retorno /get_actor/{nombre_actor"]  
-    cfun6 = ["ingresa nombre de director para devolver el éxito del mismo medido a través del retorno, nombre de sus películas, "]
-    cfun6 = cfun6 + ["con la fecha de lanzamiento, retorno individual, costo y ganancia de la misma. /get_director(nombre_director)"]
-    cfun7 = ['Ingresas un nombre de pelicula y te recomienda las similares en una lista. /recomendacion/{titulo}']
 
-    milista = cfun1+cfun2+cfun3+cfun4+cfun5+cfun6+cfun7
-    return milista
 
 @app.get("/cantidad_filmaciones_mes/{mes}")
 def cantidad_filmaciones_mes(mes: str):
@@ -126,7 +114,52 @@ def get_actor(nombre_actor: str):
 
 @app.get("/get_director/{nombre_director}")
 def get_director(nombre_director: str):
-    director_films = df_credits[df_credits['director'] == nombre_director]
+    
+    df_mov_dir = pd.read_parquet('pq_mov_dir.parquet')
+    # Filtrar el DataFrame para obtener solo las películas dirigidas por el director dado
+    director_movies = df_mov_dir[df_mov_dir['director'] == nombre_director]
+
+    if director_movies.empty:
+        # Si no hay películas del director en el DataFrame, retornar mensaje apropiado
+        return "No se encontraron películas dirigidas por {}".format(nombre_director)
+
+    # Filtrar para considerar solo los registros con valores numéricos en 'revenue' y 'budget'
+    valid_movies = director_movies[
+        pd.to_numeric(director_movies['revenue'], errors='coerce').notna() &
+        pd.to_numeric(director_movies['budget'], errors='coerce').notna()
+        ]
+
+    if valid_movies.empty:
+        # Si no hay películas con valores numéricos en 'revenue' y 'budget', retornar mensaje apropiado
+        return "No se encontraron películas con información de revenue y budget para {}".format(nombre_director)
+
+    # Calcular el total_return como la división entre la suma de 'revenue' y la suma de 'budget'
+    #total_return = valid_movies['revenue'].sum() / valid_movies['budget'].sum()#5.33
+    total_return = valid_movies['return'].sum() #310.00
+    #total_return = valid_movies['return'].sum() / len(valid_movies['return'])#10.33
+
+    # Preparar la lista de detalles de cada película
+    detalles_peliculas = []
+    for index, row in director_movies.iterrows():
+        pelicula = [
+            row['title'],
+            row['release_date'],
+            '{:,.2f}'.format(row['return']),
+            '{:,.2f}'.format(row['budget']) if not pd.isnull(row['budget']) else 'Sin información',
+            '{:,.2f}'.format(row['revenue']) if not pd.isnull(row['revenue']) else 'Sin información'
+        ]
+        detalles_peliculas.append(pelicula)
+
+    # Formatear los valores 'nan' como 'Sin información'
+    detalles_peliculas_str = []
+    for pelicula in detalles_peliculas:
+        detalles_peliculas_str.append([val if val != 'nan' else 'Sin información' for val in pelicula])
+
+    # Retornar la respuesta formateada
+    respuesta = "{} tiene un retorno_total_director de {:,.2f}.".format(nombre_director, total_return)
+    respuesta += "\n" + '\n'.join([', '.join(pelicula) for pelicula in detalles_peliculas_str])
+    return respuesta   
+    '''director_films = df_credits[df_credits['director'] == nombre_director]
     director_films_ids = director_films['id'].tolist()
 
     director_movies = df_peliculas[df_peliculas['id'].isin(director_films_ids)]
@@ -154,4 +187,4 @@ def get_director(nombre_director: str):
             mensaje += f"Ganancia: {pelicula['ganancia']}\n\n"
 
     return mensaje
-
+'''
