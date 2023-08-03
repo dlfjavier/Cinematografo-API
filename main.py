@@ -3,6 +3,21 @@ import pandas as pd
 
 app = FastAPI()
 
+
+@app.get("/peliculas_duracion/{Pelicula}")
+def peliculas_duracion(Pelicula: str):
+    df_runtime = pd.read_parquet('pq_runtime.parquet')
+    
+    pelicula_info = df_runtime[df_runtime['title'] == Pelicula]
+    
+    if not pelicula_info.empty:
+        duracion = pelicula_info['runtime_min'].values[0]
+        anio = pelicula_info['year'].values[0]
+        return f"{Pelicula}. Duración: {int(duracion)} minutos. Año: {anio}"
+    else:
+        return f"No se encontró información para la película: {Pelicula}"
+
+
 @app.get("/get_director/{nombre_director}")
 def get_director(nombre_director: str):
     df_mov_dir = pd.read_parquet('datasets/pq_mov_dir.parquet')
