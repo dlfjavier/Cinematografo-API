@@ -6,7 +6,7 @@ app = FastAPI()
 
 @app.get("/peliculas_duracion/{Pelicula}")
 def peliculas_duracion(Pelicula: str):
-    df_runtime = pd.read_parquet('pq_runtime.parquet')
+    df_runtime = pd.read_parquet('datasets/pq_runtime.parquet')
     
     pelicula_info = df_runtime[df_runtime['title'] == Pelicula]
     
