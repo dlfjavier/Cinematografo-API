@@ -1,4 +1,6 @@
 fastapi
 pandas
+pyarrow
 pydantic
 uvicorn
+fastparquet
