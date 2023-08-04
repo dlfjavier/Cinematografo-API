@@ -1,6 +1,9 @@
+cosine_similarity
 fastapi
+fastparquet
 pandas
 pyarrow
 pydantic
 uvicorn
-fastparquet
+sklearn
+TfidfVectorizer
