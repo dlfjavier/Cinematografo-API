@@ -4,8 +4,24 @@ import pandas as pd
 app = FastAPI()
 
 @app.get("/peliculas_idioma/{Idioma}")
-def peliculas_idioma(Idioma}: str):
-    
+def peliculas_idioma(Idioma: str):
+    # Cargar el DataFrame desde el archivo 'pq_prodCo.parquet'
+    df_languages = pd.read_parquet('datasets/pq_languages.parquet')
+
+    # Contador para almacenar la cantidad de películas en el idioma dado
+    cantidad_peliculas = 0
+
+    # Recorrer cada fila del DataFrame y contar las películas en el idioma dado
+    for idiomas in df_languages['spoken_languages']:
+        for idioma in idiomas:
+            if idioma['name'] == Idioma:
+                cantidad_peliculas += 1
+                break  # Solo contamos una vez por película
+
+    # Construir el mensaje de retorno con el número de películas y el idioma
+    mensaje = f"{cantidad_peliculas} película{'s' if cantidad_peliculas != 1 else ''} fueron estrenadas en idioma {Idioma}"
+
+    return mensaje
 
 @app.get("/peliculas_duracion/{Pelicula}")
 def peliculas_duracion(Pelicula: str):
