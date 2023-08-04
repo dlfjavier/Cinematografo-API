@@ -1,6 +1,7 @@
 cosine_similarity
 fastapi
 fastparquet
+linear_kernel
 pandas
 pyarrow
 pydantic
