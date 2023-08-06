@@ -5,5 +5,6 @@ pandas
 pyarrow
 pydantic
 uvicorn
+scikit-learn
 sklearn
 TfidfVectorizer
