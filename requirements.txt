@@ -1,10 +1,7 @@
-cosine_similarity
 fastapi
 fastparquet
 pandas
 pyarrow
 pydantic
 uvicorn
-scikit-learn
-sklearn
-TfidfVectorizer
+
