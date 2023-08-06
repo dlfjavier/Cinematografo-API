@@ -9,20 +9,18 @@ def peliculas_idioma(Idioma: str):
     # Cargar el DataFrame desde el archivo 'pq_prodCo.parquet'
     df_languages = pd.read_parquet('datasets/pq_languages.parquet')
 
-    # Contador para almacenar la cantidad de películas en el idioma dado
-    cantidad_peliculas = 0
+    # Buscar el idioma en el DataFrame
+    idioma_info = df_languages[df_languages['Languages'] == Idioma]
 
-    # Recorrer cada fila del DataFrame y contar las películas en el idioma dado
-    for idiomas in df_languages['spoken_languages']:
-        for idioma in idiomas:
-            if idioma['name'] == Idioma:
-                cantidad_peliculas += 1
-                break  # Solo contamos una vez por película
+    if len(idioma_info) == 0:
+        return "No se encontró información para el idioma especificado."
 
-    # Construir el mensaje de retorno con el número de películas y el idioma
-    mensaje = f"{cantidad_peliculas} película{'s' if cantidad_peliculas != 1 else ''} fueron estrenadas en idioma {Idioma}"
+    cantidad_peliculas = idioma_info['Movies'].iloc[0]
 
-    return mensaje
+    if cantidad_peliculas == 1:
+        return f"Se produjo 1 película en el idioma {Idioma}"
+    else:
+        return f"Se produjeron {cantidad_peliculas} películas en el idioma {Idioma}"
 
 @app.get("/peliculas_duracion/{Pelicula}")
 def peliculas_duracion(Pelicula: str):
@@ -70,7 +68,7 @@ def peliculas_pais( Pais: str ):
     else:
         return "País no encontrado en el DataFrame"
 
-    
+@app.get("/productoras_exitosas/{Productora}")
 def productoras_exitosas(Productora: str):
     # Cargar el DataFrame desde el archivo 'pq_prodCo.parquet'
     df_prodCo = pd.read_parquet('datasets/pq_prodCo.parquet')
