@@ -142,7 +142,7 @@ def get_director(nombre_director: str):
 @app.get("/recomendacion/{titulo}")
 def recomendacion(titulo: str):
     # Cargar el DataFrame desde el archivo pq_reccom.parquet
-    df = pd.read_parquet('datasets/pq_reccom.parquet')
+    df = pd.read_parquet('datasets/pq_reccom1000.parquet')
     tfidf = TfidfVectorizer(stop_words="english")
     df['title'] = df['title'].fillna("")
 
