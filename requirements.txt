@@ -4,4 +4,4 @@ pandas
 pyarrow
 pydantic
 uvicorn
-
+scikit_learn 
