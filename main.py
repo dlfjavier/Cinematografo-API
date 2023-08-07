@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
 
 app = FastAPI()
 
@@ -143,27 +143,20 @@ def get_director(nombre_director: str):
 def recomendacion(titulo: str):
     # Cargar el DataFrame desde el archivo pq_reccom.parquet
     df = pd.read_parquet('datasets/pq_reccom.parquet')
-
-    # Reemplazar valores nulos en la columna de títulos con una cadena vacía
-    df["title"].fillna("", inplace=True)
-
-    # Crear una matriz TF-IDF de los títulos de las películas
     tfidf = TfidfVectorizer(stop_words="english")
+    df['title'] = df['title'].fillna("")
+
     tfidf_matrix = tfidf.fit_transform(df["title"])
+    coseno_sim = linear_kernel(tfidf_matrix,tfidf_matrix)
 
-    # Calcular la similitud coseno entre los títulos
-    similarity_matrix = cosine_similarity(tfidf_matrix)
+    indices = pd.Series (df.index, index = df['title']).drop_duplicates()
+    idx = indices[titulo]
+    idx = min(idx, len(df)-1)
+    simil = list(enumerate(coseno_sim[idx]))
+    simil = sorted(simil, key= lambda x: x[1], reverse=True)
+    simil = simil[1:11]
+    movie_index = [df[0] for df in simil]
 
-    # Obtener el índice de la película proporcionada
-    idx = df[df["title"] == titulo].index[0]
+    lista = df['title'].iloc[movie_index].to_list()[:5]
 
-    # Obtener los puntajes de similitud de la película proporcionada con todas las demás películas
-    similarity_scores = list(enumerate(similarity_matrix[idx]))
-
-    # Ordenar las películas según el puntaje de similitud en orden descendente
-    similarity_scores = sorted(similarity_scores, key=lambda x: x[1], reverse=True)
-
-    # Obtener los títulos de las 5 películas más similares
-    top_movies = [df.iloc[score[0]]["title"] for score in similarity_scores[1:6]]
-
-    return top_movies
+    return {'Lista recomendada': lista}
