@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -136,7 +137,8 @@ def get_director(nombre_director: str):
     respuesta = "{} tiene un retorno_total_director de {:,.2f}.".format(nombre_director, total_return)
     respuesta += "\n" + '\n'.join([', '.join(pelicula) for pelicula in detalles_peliculas_str])
     return respuesta
-    
+
+
 @app.get("/recomendacion/{titulo}")
 def recomendacion(titulo: str):
     # Cargar el DataFrame desde el archivo pq_reccom.parquet
