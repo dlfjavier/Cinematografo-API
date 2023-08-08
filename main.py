@@ -112,8 +112,8 @@ def get_director(nombre_director: str):
         return "No se encontraron películas con información de revenue y budget para {}".format(nombre_director)
 
     # Calcular el total_return como la división entre la suma de 'revenue' y la suma de 'budget'
-    #total_return = valid_movies['revenue'].sum() / valid_movies['budget'].sum()#5.33
-    total_return = valid_movies['return'].sum() #310.00
+    total_return = valid_movies['revenue'].sum() / valid_movies['budget'].sum()#5.33
+    #total_return = valid_movies['return'].sum() #310.00
     #total_return = valid_movies['return'].sum() / len(valid_movies['return'])#10.33
 
     # Preparar la lista de detalles de cada película
