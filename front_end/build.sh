@@ -3,4 +3,5 @@
 
 set -o errexit
 
-Pip install -r requirements.tx
+pip install --upgrade pip
+pip install -r requirements.tx
