@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Frontend</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>API Frontend</h1>
+    <form method="post" action="/consulta">
+        <label for="funcion">Selecciona una función:</label>
+        <select name="funcion" id="funcion" required>
+            <option value="peliculas_idioma">Consultar Películas por Idioma</option>
+            <option value="peliculas_duracion">Consultar Duración de Películas</option>
+            <option value="franquicia">Consultar Franquicia</option>
+            <option value="peliculas_pais">Consultar Películas por País</option>
+            <option value="productoras_exitosas">Consultar Productoras Exitosas</option>
+            <option value="get_director">Consultar Director</option>
+            <option value="recomendacion">Recomendación de Películas</option>
+        </select>
+        <br>
+        <label for="argumento">Ingresa el argumento:</label>
+        <input type="text" name="argumento" required>
+        <br>
+        <input type="submit" value="Consultar">
+    </form>
+    {% if result %}
+    <div class="result">
+        {{ result|safe }}
+    </div>
+    {% endif %}
+</body>
+</html>
+
