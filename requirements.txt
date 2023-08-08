@@ -1,6 +1,5 @@
 fastapi
 fastparquet
-flask
 pandas
 pyarrow
 pydantic
