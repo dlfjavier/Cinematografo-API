@@ -78,3 +78,8 @@ En el notebook `eda.ipynb`:
 ### Sistema de recomendación
 - Se crea una función que a partir del título de una película, retorna una lista de 5 recomendaciones.
 
+### Video de demostración
+https://drive.google.com/drive/folders/1EHOI89EIaL26YUpMilQImvau4eQsw9LC?usp=sharing
+
+### Autor
+Javier de la Fuente  dlfavier@gmail.com
